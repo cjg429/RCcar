@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<launch>
+  <arg name="hokuyo" value="/dev/ttyACM2" />
+  <arg name="imu" value="/dev/ttyACM0" />
+  <arg name="car" value="/dev/ttyACM1" />
+  <param name="/use_sim_time" value="false"/>
+  <node name="hokuyo" pkg="urg_node" type="urg_node" output="screen" args="_serial_port:=$(arg hokuyo)" />
+  <node name="imu_node" pkg="imu" type="imu_node.py" output="screen">
+    <param name="port" value="$(arg imu)" />
+  </node>
+  <node name="controller" pkg="rosserial_python" type="serial_node.py" args="$(arg car)" />
+  <node name="talker" pkg="race" type="talker.py" />
+  <node name="tf_broadcaster" pkg="final_project" type="broadcaster" output="screen" />
+    <param name="imu_topic" value="imu" />
+    <param name="base_frame" value="base_link" />
+    <param name="base_stabilized_frame" value="base_stabilized" />
+</launch>
